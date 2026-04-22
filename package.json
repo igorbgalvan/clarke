@@ -1,0 +1,13 @@
+{
+  "name": "clarke-energia",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w frontend",
+    "dev:api": "npm run dev -w backend",
+    "build": "npm run build -w backend && npm run build -w frontend"
+  }
+}
