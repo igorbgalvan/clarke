@@ -1,0 +1,53 @@
+enum TipoSolucao {
+  GD
+  MERCADO_LIVRE
+}
+
+type Fornecedor {
+  id: String!
+  nome: String!
+  logoUrl: String!
+  estadoOrigem: String!
+  totalDeClientes: Int!
+  avaliacaoMedia: Float!
+}
+
+type FornecedorSlim {
+  id: String!
+  nome: String!
+}
+
+type ResumoSolucao {
+  tipo: TipoSolucao!
+  """Custo total com a tarifa de referência (mesmo que na raiz, por transparência)."""
+  custoBase: Float!
+  """Maior economia em reais entre fornecedores desta solução no UF."""
+  melhorEconomia: Float
+  melhorEconomiaPercentual: Float
+  fornecedorMelhor: FornecedorSlim
+}
+
+type ComparacaoFornecedor {
+  fornecedor: Fornecedor!
+  solucao: TipoSolucao!
+  custoKwh: Float!
+  custoComFornecedor: Float!
+  economia: Float!
+  economiaPercentual: Float
+}
+
+type Simulacao {
+  uf: String!
+  consumoKwh: Float!
+  tarifaBaseKwh: Float!
+  custoBase: Float!
+  resumoPorSolucao: [ResumoSolucao!]!
+  """Cada oferta (fornecedor + solução) no UF; compara na mesma solução filtrando por `solucao`."""
+  comparacoes: [ComparacaoFornecedor!]!
+}
+
+type Query {
+  """UFs com tarifa e ofertas neste mock (dados fictícios)."""
+  ufs: [String!]!
+  simulacao(uf: String!, consumoKwh: Float!): Simulacao!
+}

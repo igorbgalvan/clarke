@@ -10,5 +10,5 @@ Monorepo com **React** (`frontend/`) e **Node** (`backend/`). Requisitos: ver `8
 
 - `npm install` — instala `frontend` e `backend` (workspaces)
 - `npm run dev:web` — Vite (frontend)
-- `npm run dev:api` — API Express em `PORT` (padrão `4000`)
+- `npm run dev:api` — API Express em `PORT` (padrão `4000`); **GraphQL** em `http://localhost:4000/graphql` (GraphiQL no browser; `GET /health` para liveness)
 - `npm run build` — compila `backend` e `frontend`
