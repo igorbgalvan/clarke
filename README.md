@@ -13,3 +13,5 @@ Monorepo com **React** (`frontend/`) e **Node** (`backend/`). Requisitos: ver `8
 - `npm run dev:api` — API Express em `PORT` (padrão `4000`); **GraphQL** em `http://localhost:4000/graphql` (GraphiQL no browser; `GET /health` para liveness)
 - `npm run build` — compila `backend` e `frontend`
 - `npm run test:api` — testes unitários do backend (Vitest: domínio, repositório, simulação)
+- `npm run test:web` — testes do frontend (Vitest + Testing Library: `fetch`, `App`)
+- `npm test` — backend + frontend

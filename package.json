@@ -9,6 +9,8 @@
     "dev:web": "npm run dev -w frontend",
     "dev:api": "npm run dev -w backend",
     "build": "npm run build -w backend && npm run build -w frontend",
-    "test:api": "npm run test -w backend"
+    "test:api": "npm run test -w backend",
+    "test:web": "npm run test -w frontend",
+    "test": "npm run test:api && npm run test:web"
   }
 }
