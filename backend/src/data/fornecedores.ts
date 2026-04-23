@@ -1,7 +1,7 @@
 import type { FornecedorMock, Oferta } from "./types.js";
 
-/** Uma imagem genérica partilhada no front (`public/fornecedor-generico.png`), caminho servido pelo SPA. */
-const LOGO_FORNECEDOR_GENERICO = "/fornecedor-generico.png";
+/** Logo genérica (SVG) partilhada: raio + tema energia, servida pelo SPA em `public/`. */
+const LOGO_FORNECEDOR_GENERICO = "/fornecedor-generico.svg";
 
 export const fornecedores: FornecedorMock[] = [
   {
