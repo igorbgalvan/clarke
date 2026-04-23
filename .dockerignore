@@ -1,0 +1,16 @@
+node_modules
+**/node_modules
+.git
+.cursor
+**/.env
+**/.env.*
+!**/.env.example
+dist
+**/dist
+.vscode
+*.log
+coverage
+**/coverage
+frontend/src/**/*.test.ts
+frontend/src/**/*.test.tsx
+backend/src/**/*.test.ts

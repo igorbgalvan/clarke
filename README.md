@@ -15,3 +15,14 @@ Monorepo com **React** (`frontend/`) e **Node** (`backend/`). Requisitos: ver `8
 - `npm run test:api` — testes unitários do backend (Vitest: domínio, repositório, simulação)
 - `npm run test:web` — testes do frontend (Vitest + Testing Library: `fetch`, `App`)
 - `npm test` — backend + frontend
+
+## Docker (local)
+
+```bash
+docker compose up --build
+```
+
+- **Interface:** <http://localhost:8080> (Nginx a servir o front; `/graphql` faz *proxy* para a API, para o *browser* usar a mesma origem).
+- **API direto (debug):** <http://localhost:4000> (`/health`, `/graphql`).
+
+*Nota:* a imagem do *front* é construída com `VITE_GRAPHQL_URL=/graphql` para bater com o Nginx. Em VPS podes ajustar portas ou pôr um *reverse proxy* à frente.
