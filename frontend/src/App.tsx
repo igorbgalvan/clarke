@@ -1,8 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { graphqlRequest } from "./api/graphql.ts";
 import { Q_SIMULACAO, Q_UFS } from "./api/queries.ts";
-import type { Simulacao, SimulacaoData, UfsData } from "./api/types.ts";
+import type { ComparacaoFornecedor, Simulacao, SimulacaoData, UfsData } from "./api/types.ts";
 import { labelSolucao } from "./labels.ts";
+import { blocosOfertasPorSolucao } from "./ordenarOfertas.ts";
 import "./App.css";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -11,6 +12,47 @@ const n2 = (x: number) => x.toLocaleString("pt-BR", { maximumFractionDigits: 2 }
 function fmtPct(n: number | null | undefined): string {
   if (n == null) return "—";
   return `${(n * 100).toFixed(1).replace(".", ",")}%`;
+}
+
+function TabelaOfertas({ linhas }: { linhas: ComparacaoFornecedor[] }) {
+  if (linhas.length === 0) {
+    return null;
+  }
+  return (
+    <div className="tablewrap">
+      <table>
+        <caption className="sr">Demais ofertas</caption>
+        <thead>
+          <tr>
+            <th>Fornecedor</th>
+            <th>UF</th>
+            <th className="num">R$/kWh</th>
+            <th className="num">Custo c/ oferta</th>
+            <th className="num">Economia</th>
+            <th className="num">%</th>
+            <th className="num">Clientes</th>
+            <th className="num">Nota</th>
+          </tr>
+        </thead>
+        <tbody>
+          {linhas.map((c) => (
+            <tr key={`${c.fornecedor.id}-${c.solucao}-${c.custoKwh}`}>
+              <td>
+                <span className="fn">{c.fornecedor.nome}</span>
+              </td>
+              <td>{c.fornecedor.estadoOrigem}</td>
+              <td className="num">{n2(c.custoKwh)}</td>
+              <td className="num">{brl.format(c.custoComFornecedor)}</td>
+              <td className="num">{brl.format(c.economia)}</td>
+              <td className="num">{fmtPct(c.economiaPercentual)}</td>
+              <td className="num">{c.fornecedor.totalDeClientes.toLocaleString("pt-BR")}</td>
+              <td className="num">{c.fornecedor.avaliacaoMedia.toFixed(1)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default function App() {
@@ -69,9 +111,11 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="app__head">
-        <h1>Simulador (dados fictícios)</h1>
-        <p>Escolha a UF, informe o consumo mensal e compare economia por solução e por fornecedor.</p>
+      <div className="app__strip" aria-hidden />
+      <header className="app__brand">
+        <img className="app__logo" src="/clarke-logo.png" alt="Clarke Energia" />
+        <h1>Simulador de economia</h1>
+        <p className="app__tagline">Dados fictícios — escolha a UF, informe o consumo mensal e veja a melhor oferta por solução.</p>
       </header>
 
       {ufsErro ? <p className="app__warn">{ufsErro}</p> : null}
@@ -115,7 +159,7 @@ export default function App() {
           />
         </div>
         <button className="btn" type="submit" disabled={carregando || ufs.length === 0}>
-          {carregando ? "Calculando…" : "Simular"}
+          {carregando ? "Calculando…" : "Simular economia"}
         </button>
       </form>
 
@@ -125,79 +169,54 @@ export default function App() {
         <section className="app__result" aria-live="polite">
           <h2>Resultado</h2>
           <p className="app__ref">
-            Tarifa de referência no UF: {n2(resultado.tarifaBaseKwh)} R$/kWh · Custo base estimado:{" "}
-            <strong>{brl.format(resultado.custoBase)}</strong> (consumo {n2(resultado.consumoKwh)} kWh)
+            <strong>Referência no {resultado.uf}:</strong> {n2(resultado.tarifaBaseKwh)} R$/kWh · Custo base estimado{" "}
+            {brl.format(resultado.custoBase)} (consumo {n2(resultado.consumoKwh)} kWh)
           </p>
 
-          <h3>Melhor economia por solução</h3>
-          {resultado.resumoPorSolucao.length === 0 ? (
+          {resultado.comparacoes.length === 0 ? (
             <p>Sem ofertas neste UF (mock).</p>
           ) : (
-            <ul className="cards">
-              {resultado.resumoPorSolucao.map((r) => (
-                <li key={r.tipo} className="card">
-                  <strong>{labelSolucao(r.tipo)}</strong>
-                  {r.melhorEconomia != null ? (
-                    <>
-                      <p>
-                        Melhor economia: <em>{brl.format(r.melhorEconomia)}</em> ({fmtPct(r.melhorEconomiaPercentual)})
-                      </p>
-                      {r.fornecedorMelhor ? (
-                        <p className="mut">
-                          Fornecedor: {r.fornecedorMelhor.nome} ({r.fornecedorMelhor.id})
-                        </p>
-                      ) : null}
-                    </>
-                  ) : (
-                    <p>—</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
+            <div className="app__blocos">
+              {blocosOfertasPorSolucao(resultado.comparacoes).map(({ tipo, melhor, outras }) => (
+                <div key={tipo} className="app__bloco-solucao">
+                  <h3>{labelSolucao(tipo)}</h3>
 
-          <h3>Comparar fornecedores (por oferta e solução)</h3>
-          <p className="app__hint">Filtre mentalmente por coluna <strong>Sol.</strong> para comparar ofertas na mesma solução.</p>
-          {resultado.comparacoes.length === 0 ? null : (
-            <div className="tablewrap">
-              <table>
-                <caption className="sr">Comparação por fornecedor</caption>
-                <thead>
-                  <tr>
-                    <th>Fornecedor</th>
-                    <th>UF</th>
-                    <th>Sol.</th>
-                    <th className="num">R$/kWh</th>
-                    <th className="num">Custo c/ oferta</th>
-                    <th className="num">Economia</th>
-                    <th className="num">%</th>
-                    <th className="num">Clientes</th>
-                    <th className="num">Nota</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...resultado.comparacoes]
-                    .sort(
-                      (a, b) =>
-                        a.solucao.localeCompare(b.solucao) || a.fornecedor.nome.localeCompare(b.fornecedor.nome)
-                    )
-                    .map((c) => (
-                    <tr key={`${c.fornecedor.id}-${c.solucao}-${c.custoKwh}`}>
-                      <td>
-                        <span className="fn">{c.fornecedor.nome}</span>
-                      </td>
-                      <td>{c.fornecedor.estadoOrigem}</td>
-                      <td>{c.solucao === "GD" ? "GD" : "ML"}</td>
-                      <td className="num">{n2(c.custoKwh)}</td>
-                      <td className="num">{brl.format(c.custoComFornecedor)}</td>
-                      <td className="num">{brl.format(c.economia)}</td>
-                      <td className="num">{fmtPct(c.economiaPercentual)}</td>
-                      <td className="num">{c.fornecedor.totalDeClientes.toLocaleString("pt-BR")}</td>
-                      <td className="num">{c.fornecedor.avaliacaoMedia.toFixed(1)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                  <div className="app__oferta-destaque">
+                    <p className="app__oferta-rotulo">Melhor oferta nesta solução</p>
+                    <p className="app__oferta-tit">
+                      <strong>{melhor.fornecedor.nome}</strong>
+                    </p>
+                    <dl className="app__defgrid">
+                      <div>
+                        <dt>Economia</dt>
+                        <dd>
+                          <strong>{brl.format(melhor.economia)}</strong> ({fmtPct(melhor.economiaPercentual)})
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Preço</dt>
+                        <dd>
+                          <strong>{n2(melhor.custoKwh)} R$/kWh</strong> · Custo: {brl.format(melhor.custoComFornecedor)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Clientes / nota</dt>
+                        <dd>
+                          <strong>{melhor.fornecedor.totalDeClientes.toLocaleString("pt-BR")}</strong> · Nota{" "}
+                          <strong>{melhor.fornecedor.avaliacaoMedia.toFixed(1)}</strong> · {melhor.fornecedor.estadoOrigem}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+
+                  {outras.length > 0 ? (
+                    <>
+                      <h4 className="app__subh">Demais ofertas</h4>
+                      <TabelaOfertas linhas={outras} />
+                    </>
+                  ) : null}
+                </div>
+              ))}
             </div>
           )}
         </section>
