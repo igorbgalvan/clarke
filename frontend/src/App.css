@@ -182,9 +182,34 @@
   margin: 0 0 0.35rem;
 }
 
-.app__oferta-tit {
+.app__oferta-headline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin: 0 0 0.5rem;
+}
+
+.app__oferta-tit {
+  margin: 0;
   font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+/* Logo genérica (mock) partilhada por todos os fornecedores */
+.app__fornec-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  background: #fff;
+  flex-shrink: 0;
+}
+
+td .app__fornec-logo {
+  width: 36px;
+  height: 36px;
+  display: block;
 }
 
 .app__defgrid {

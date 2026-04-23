@@ -14,6 +14,20 @@ function fmtPct(n: number | null | undefined): string {
   return `${(n * 100).toFixed(1).replace(".", ",")}%`;
 }
 
+function LogoFornecedor({ nome, url }: { nome: string; url: string }) {
+  return (
+    <img
+      className="app__fornec-logo"
+      src={url}
+      alt={`Logo ${nome}`}
+      width={40}
+      height={40}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
 function TabelaOfertas({ linhas }: { linhas: ComparacaoFornecedor[] }) {
   if (linhas.length === 0) {
     return null;
@@ -24,6 +38,7 @@ function TabelaOfertas({ linhas }: { linhas: ComparacaoFornecedor[] }) {
         <caption className="sr">Demais ofertas</caption>
         <thead>
           <tr>
+            <th>Logo</th>
             <th>Fornecedor</th>
             <th>UF</th>
             <th className="num">R$/kWh</th>
@@ -37,6 +52,9 @@ function TabelaOfertas({ linhas }: { linhas: ComparacaoFornecedor[] }) {
         <tbody>
           {linhas.map((c) => (
             <tr key={`${c.fornecedor.id}-${c.solucao}-${c.custoKwh}`}>
+              <td>
+                <LogoFornecedor nome={c.fornecedor.nome} url={c.fornecedor.logoUrl} />
+              </td>
               <td>
                 <span className="fn">{c.fornecedor.nome}</span>
               </td>
@@ -183,9 +201,12 @@ export default function App() {
 
                   <div className="app__oferta-destaque">
                     <p className="app__oferta-rotulo">Melhor oferta nesta solução</p>
-                    <p className="app__oferta-tit">
-                      <strong>{melhor.fornecedor.nome}</strong>
-                    </p>
+                    <div className="app__oferta-headline">
+                      <LogoFornecedor nome={melhor.fornecedor.nome} url={melhor.fornecedor.logoUrl} />
+                      <p className="app__oferta-tit">
+                        <strong>{melhor.fornecedor.nome}</strong>
+                      </p>
+                    </div>
                     <dl className="app__defgrid">
                       <div>
                         <dt>Economia</dt>

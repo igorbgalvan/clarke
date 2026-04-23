@@ -1,10 +1,13 @@
 import type { FornecedorMock, Oferta } from "./types.js";
 
+/** Uma imagem genérica partilhada no front (`public/fornecedor-generico.png`), caminho servido pelo SPA. */
+const LOGO_FORNECEDOR_GENERICO = "/fornecedor-generico.png";
+
 export const fornecedores: FornecedorMock[] = [
   {
     id: "f-aurora",
     nome: "Aurora Sustentável S.A.",
-    logoUrl: "https://placehold.co/64x64/0d9488/ffffff?text=AS",
+    logoUrl: LOGO_FORNECEDOR_GENERICO,
     estadoOrigem: "SP",
     totalDeClientes: 4200,
     avaliacaoMedia: 4.6,
@@ -12,7 +15,7 @@ export const fornecedores: FornecedorMock[] = [
   {
     id: "f-brisa",
     nome: "Brisa Comercializadora",
-    logoUrl: "https://placehold.co/64x64/2563eb/ffffff?text=Br",
+    logoUrl: LOGO_FORNECEDOR_GENERICO,
     estadoOrigem: "MG",
     totalDeClientes: 3100,
     avaliacaoMedia: 4.3,
@@ -20,7 +23,7 @@ export const fornecedores: FornecedorMock[] = [
   {
     id: "f-horizonte",
     nome: "Horizonte ML Ltda",
-    logoUrl: "https://placehold.co/64x64/dc2626/ffffff?text=HM",
+    logoUrl: LOGO_FORNECEDOR_GENERICO,
     estadoOrigem: "RJ",
     totalDeClientes: 8900,
     avaliacaoMedia: 4.8,
@@ -28,7 +31,7 @@ export const fornecedores: FornecedorMock[] = [
   {
     id: "f-zenite",
     nome: "Zênite GD",
-    logoUrl: "https://placehold.co/64x64/7c3aed/ffffff?text=Z",
+    logoUrl: LOGO_FORNECEDOR_GENERICO,
     estadoOrigem: "BA",
     totalDeClientes: 1500,
     avaliacaoMedia: 4.1,
