@@ -1,21 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" role="img" aria-label="Fornecedor de energia">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" role="img" aria-label="Energia">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="80" y2="80">
-      <stop offset="0%" stop-color="#0d9488"/>
-      <stop offset="55%" stop-color="#0e7490"/>
-      <stop offset="100%" stop-color="#134e4a"/>
+    <linearGradient id="g" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0d9488"/>
+      <stop offset="0.55" stop-color="#0e7490"/>
+      <stop offset="1" stop-color="#134e4a"/>
     </linearGradient>
   </defs>
-  <rect width="80" height="80" rx="20" fill="url(#bg)"/>
-  <!-- Símbolo de energia elétrica: raio (leitura imediata) -->
-  <path
-    fill="#f0fdfa"
-    d="M44.5 14 L28 38 h11.5 l-4.5 28 20-32 H47.5 L51.5 14 z"
-  />
-  <!-- Ondas = “fluxo” de energia (reforça o tema) -->
-  <g fill="none" stroke="rgba(240,253,250,0.45)" stroke-width="1.5" stroke-linecap="round">
-    <path d="M12 58c4-2 6-2 10 0s6 2 10 0"/>
-    <path d="M16 64c3-1.5 5-1.5 8 0"/>
-  </g>
+  <rect width="80" height="80" rx="20" fill="url(#g)"/>
+  <path fill="#f0fdfa" d="M 45 12 L 31 38 L 40 38 L 27 66 L 50 35 L 41 35 L 50 12 Z"/>
+  <path fill="none" stroke="rgba(240,253,250,0.45)" stroke-width="1.5" stroke-linecap="round" d="M12 58c4-2 8-2 12 0s8 2 12 0"/>
+  <path fill="none" stroke="rgba(240,253,250,0.45)" stroke-width="1.5" stroke-linecap="round" d="M16 64c4-2 8-2 12 0"/>
   <rect x="5" y="5" width="70" height="70" rx="17" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.25"/>
 </svg>
